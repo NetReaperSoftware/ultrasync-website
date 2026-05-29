@@ -4,8 +4,8 @@ import { Activity } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const supabase = createClient(
-  'https://rdwcftfxnfcatmjapfjn.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkd2NmdGZ4bmZjYXRtamFwZmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgxNDYwMTIsImV4cCI6MjA2MzcyMjAxMn0.R2dQtfnmJ6xzXPFYY815fg8wvZZtjSlSkOeXBYtJ8kA'
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
 );
 
 // Capture tokens immediately before React renders
