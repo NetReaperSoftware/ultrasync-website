@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { Activity } from 'lucide-react';
+import logo from '../../assets/icons/Logo-1024.png';
 import { Link } from 'react-router-dom';
 
 const supabase = createClient(
@@ -124,9 +124,7 @@ export default function ResetPassword() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex flex-col">
       <div className="p-6">
         <Link to="/" className="flex items-center gap-2 w-fit">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
-            <Activity className="w-5 h-5 text-white" />
-          </div>
+          <img src={logo} alt="UltraSync" className="w-8 h-8 rounded-lg" />
           <span className="text-white font-bold">UltraSync</span>
         </Link>
       </div>

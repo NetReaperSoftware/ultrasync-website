@@ -1,1 +1,1 @@
-https://apps.apple.com/us/app/fitsync-fitness-tracker/id6749923790
+https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790

@@ -112,7 +112,7 @@ export default function FAQ() {
   return (
     <div className="pt-16">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 py-24 text-white text-center">
+      <section className="bg-gradient-to-br from-teal-500 to-cyan-600 py-24 text-white text-center">
         <div className="max-w-4xl mx-auto px-4">
           <h1 className="text-5xl font-bold mb-6">Frequently Asked Questions</h1>
           <p className="text-xl text-white/90">Everything you need to know about UltraSync's features and functionality</p>

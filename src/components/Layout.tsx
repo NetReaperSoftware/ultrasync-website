@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Activity, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import logo from '../../assets/icons/Logo-1024.png';
 
-const APP_STORE_URL = 'https://apps.apple.com/us/app/fitsync-fitness-tracker/id6749923790';
+const APP_STORE_URL = 'https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,9 +32,7 @@ export default function Layout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center shadow-lg">
-                <Activity className="w-6 h-6 text-white" />
-              </div>
+              <img src={logo} alt="UltraSync" className="w-10 h-10 rounded-xl shadow-lg" />
               <span className="text-xl font-bold text-slate-900">UltraSync</span>
             </Link>
 
@@ -87,9 +86,7 @@ export default function Layout() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <Link to="/" className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-white" />
-                </div>
+                <img src={logo} alt="UltraSync" className="w-10 h-10 rounded-xl" />
                 <span className="text-xl font-bold">UltraSync</span>
               </Link>
               <p className="text-slate-400 leading-relaxed text-sm">

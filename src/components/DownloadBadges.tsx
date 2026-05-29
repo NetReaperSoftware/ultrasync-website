@@ -1,7 +1,7 @@
 import appStoreBadge from '../assets/Download_on_the_App_Store_Badge_US-UK_RGB_blk_092917.svg';
 import googlePlayBadge from '../assets/GetItOnGooglePlay_Badge_Web_color_English.svg';
 
-const APP_STORE_URL = 'https://apps.apple.com/us/app/fitsync-fitness-tracker/id6749923790';
+const APP_STORE_URL = 'https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790';
 
 interface Props {
   className?: string;

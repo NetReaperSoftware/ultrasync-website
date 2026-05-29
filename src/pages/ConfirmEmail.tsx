@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity } from 'lucide-react';
+import logo from '../../assets/icons/Logo-1024.png';
 import DownloadBadges from '../components/DownloadBadges';
 
 type Status = 'success' | 'already-confirmed' | 'error';
@@ -51,9 +51,7 @@ export default function ConfirmEmail() {
     <div className="min-h-screen bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700 flex flex-col">
       <div className="p-6">
         <Link to="/" className="flex items-center gap-2 w-fit">
-          <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-            <Activity className="w-5 h-5 text-white" />
-          </div>
+          <img src={logo} alt="UltraSync" className="w-8 h-8 rounded-lg" />
           <span className="text-white font-bold">UltraSync</span>
         </Link>
       </div>
@@ -73,7 +71,7 @@ export default function ConfirmEmail() {
                   window.location.href = 'fitsync://confirm-email';
                   setTimeout(() => {
                     if (confirm('UltraSync app not found. Download it now?')) {
-                      window.open('https://apps.apple.com/us/app/fitsync-fitness-tracker/id6749923790', '_blank');
+                      window.open('https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790', '_blank');
                     }
                   }, 1500);
                 }}

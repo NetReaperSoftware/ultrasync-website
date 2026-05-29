@@ -3,7 +3,7 @@ import {
 } from 'lucide-react';
 import DownloadBadges from '../components/DownloadBadges';
 
-const APP_STORE_URL = 'https://apps.apple.com/us/app/fitsync-fitness-tracker/id6749923790';
+const APP_STORE_URL = 'https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790';
 
 const features = [
   {
