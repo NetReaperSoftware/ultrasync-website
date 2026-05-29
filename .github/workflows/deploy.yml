@@ -1,4 +1,4 @@
-name: Deploy FitSync Website
+name: Deploy UltraSync Website
 
 on:
   push:

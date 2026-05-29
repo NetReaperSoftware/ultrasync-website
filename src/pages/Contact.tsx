@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 const supportCards = [
-  { icon: '📧', title: 'Email Support', description: 'For technical issues and account support', contact: 'support@fitsync.app' },
-  { icon: '💡', title: 'Feature Requests', description: 'Have an idea to make UltraSync better?', contact: 'support@fitsync.app' },
-  { icon: '🐛', title: 'Bug Reports', description: 'Found a bug? Help us fix it quickly', contact: 'support@fitsync.app' },
+  { icon: '📧', title: 'Email Support', description: 'For technical issues and account support', contact: 'support@ultrasync.app' },
+  { icon: '💡', title: 'Feature Requests', description: 'Have an idea to make UltraSync better?', contact: 'support@ultrasync.app' },
+  { icon: '🐛', title: 'Bug Reports', description: 'Found a bug? Help us fix it quickly', contact: 'support@ultrasync.app' },
 ];
 
 const quickHelp = [
@@ -29,7 +29,7 @@ export default function Contact() {
     e.preventDefault();
     const subjectLine = encodeURIComponent(`[${formData.subject || 'General'}] UltraSync Contact`);
     const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`);
-    window.location.href = `mailto:support@fitsync.app?subject=${subjectLine}&body=${body}`;
+    window.location.href = `mailto:support@ultrasync.app?subject=${subjectLine}&body=${body}`;
     setSubmitted(true);
   };
 
@@ -55,7 +55,7 @@ export default function Contact() {
               <div className="bg-teal-50 border border-teal-200 rounded-2xl p-8 text-center">
                 <div className="text-4xl mb-4">✅</div>
                 <h3 className="text-xl font-bold text-teal-800 mb-2">Message Prepared!</h3>
-                <p className="text-teal-700">Your email client should have opened. If not, email us directly at <a href="mailto:support@fitsync.app" className="underline">support@fitsync.app</a></p>
+                <p className="text-teal-700">Your email client should have opened. If not, email us directly at <a href="mailto:support@ultrasync.app" className="underline">support@ultrasync.app</a></p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">

@@ -120,7 +120,7 @@ export default function TermsOfUse() {
 
           <TermsSection number="17" title="Contact Information">
             <p><strong>UltraSync Development Team</strong><br />
-            Email: <a href="mailto:support@fitsync.app" className="text-teal-600 hover:underline">support@fitsync.app</a></p>
+            Email: <a href="mailto:support@ultrasync.app" className="text-teal-600 hover:underline">support@ultrasync.app</a></p>
           </TermsSection>
 
           <div className="border-t border-slate-200 pt-6 text-sm text-slate-500">

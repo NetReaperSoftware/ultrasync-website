@@ -22,7 +22,7 @@ export default function PrivacyPolicy() {
           </Section>
 
           <Section title="Contact Information">
-            <p><strong>UltraSync Development Team</strong><br />Email: <a href="mailto:support@fitsync.app" className="text-teal-600 hover:underline">support@fitsync.app</a></p>
+            <p><strong>UltraSync Development Team</strong><br />Email: <a href="mailto:support@ultrasync.app" className="text-teal-600 hover:underline">support@ultrasync.app</a></p>
           </Section>
 
           <Section title="Information We Collect">
@@ -88,7 +88,7 @@ export default function PrivacyPolicy() {
           </Section>
 
           <Section title="Your Privacy Rights">
-            <p>You have the right to access, correct, delete, and port your personal data, as well as object to or restrict certain processing activities. To exercise these rights, contact us at <a href="mailto:support@fitsync.app" className="text-teal-600 hover:underline">support@fitsync.app</a>. We will respond within 30 days.</p>
+            <p>You have the right to access, correct, delete, and port your personal data, as well as object to or restrict certain processing activities. To exercise these rights, contact us at <a href="mailto:support@ultrasync.app" className="text-teal-600 hover:underline">support@ultrasync.app</a>. We will respond within 30 days.</p>
           </Section>
 
           <Section title="Data Retention">
@@ -101,11 +101,11 @@ export default function PrivacyPolicy() {
           </Section>
 
           <Section title="Children's Privacy (COPPA)">
-            <p>UltraSync is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe your child has provided personal information to us, contact us at <a href="mailto:support@fitsync.app" className="text-teal-600 hover:underline">support@fitsync.app</a> and we will delete it promptly.</p>
+            <p>UltraSync is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe your child has provided personal information to us, contact us at <a href="mailto:support@ultrasync.app" className="text-teal-600 hover:underline">support@ultrasync.app</a> and we will delete it promptly.</p>
           </Section>
 
           <Section title="Contact Us">
-            <p><strong>Email:</strong> <a href="mailto:support@fitsync.app" className="text-teal-600 hover:underline">support@fitsync.app</a><br />
+            <p><strong>Email:</strong> <a href="mailto:support@ultrasync.app" className="text-teal-600 hover:underline">support@ultrasync.app</a><br />
             <strong>Subject Line:</strong> "Privacy Policy Inquiry"<br />
             <strong>Response Time:</strong> We respond to privacy inquiries within 5 business days.</p>
           </Section>

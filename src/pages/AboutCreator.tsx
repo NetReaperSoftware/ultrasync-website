@@ -165,7 +165,7 @@ export default function AboutCreator() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <a
-              href="mailto:support@fitsync.app"
+              href="mailto:support@ultrasync.app"
               className="px-8 py-3 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-center hover:shadow-lg transition-all"
             >
               Email Me
