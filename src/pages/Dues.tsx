@@ -98,7 +98,7 @@ const MEMBERS: Record<string, Member> = {
     balance: 5.5,
     asOf: '2026-09-01',
     payments: [
-      { date: '2026-09-01', amount: 0, note: 'Apple Pay', status: 'late' },
+      { date: '2026-09-01', amount: 0, note: 'Missed', status: 'late' },
       { date: '2026-08-01', amount: 32, note: 'Apple Pay' },
       { date: '2026-07-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-06-01', amount: 16, note: 'Apple Pay' },
