@@ -25,7 +25,7 @@ export type Member = {
   balance: number;
   /** YYYY-MM-DD — the date you last checked this balance. Accrual starts from here. */
   asOf: string;
-  /** Payments received. The page shows the last 6 months; older entries are kept but hidden. */
+  /** Payments received. Every entry is shown, newest first — trim the list to shorten the history. */
   payments: Payment[];
 };
 
@@ -156,14 +156,16 @@ function startOfToday(): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 }
 
-/** Payments in the rolling 6 months up to `today`, newest first, plus their total. */
-export function recentPayments(member: Member, today: Date) {
-  const cutoff = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+/** Every recorded payment, newest first, plus the total and the oldest date covered. */
+export function paymentHistory(member: Member) {
   const list = member.payments
     .map((pmt) => ({ ...pmt, on: parseLocalDate(pmt.date) }))
-    .filter((pmt) => pmt.on >= cutoff && pmt.on <= today)
     .sort((a, b) => b.on.getTime() - a.on.getTime());
-  return { list, total: round2(list.reduce((sum, pmt) => sum + pmt.amount, 0)), cutoff };
+  return {
+    list,
+    total: round2(list.reduce((sum, pmt) => sum + pmt.amount, 0)),
+    oldest: list.length ? list[list.length - 1].on : undefined,
+  };
 }
 
 export function computeDues(member: Member, today: Date) {
@@ -231,7 +233,7 @@ export default function Dues() {
 
   const today = startOfToday();
   const d = computeDues(member, today);
-  const history = recentPayments(member, today);
+  const history = paymentHistory(member);
   const owesMoney = d.owed > 0;
   const amount = currency.format(d.owed);
   const payUrl = `https://cash.app/$${CASHTAG}/${d.owed.toFixed(2)}`;
@@ -337,13 +339,15 @@ export default function Dues() {
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100">
           <div className="flex items-baseline justify-between mb-6">
             <h2 className="text-2xl font-bold text-slate-900">Payment history</h2>
-            <span className="text-slate-500 text-sm">Last 6 months</span>
+            {history.oldest && (
+              <span className="text-slate-500 text-sm">Since {monthYear.format(history.oldest)}</span>
+            )}
           </div>
 
           {history.list.length === 0 ? (
             <div className="flex items-start gap-3 text-slate-500">
               <Receipt className="w-5 h-5 flex-shrink-0 mt-0.5" />
-              <p>No payments recorded in the last 6 months.</p>
+              <p>No payments recorded yet.</p>
             </div>
           ) : (
             <>
