@@ -11,7 +11,7 @@ const MEMBERS: Record<string, Member> = {
   'john-28ffb5f882': { name: 'John', owed: 0 },
   'jesse-b754903054': { name: 'Jesse', owed: 19 },
   'sarah-65e9f848a6': { name: 'Sarah', owed: 19 },
-  'michael-b999124566': { name: 'Michael', owed: 19 },
+  'michael-b999124566': { name: 'Michael', owed: 0 },
   'austin-669736a1f9': { name: 'Austin', owed: 24.5 },
   'thomas-aab9e0b9d4': { name: 'Thomas', owed: 19 },
 };
