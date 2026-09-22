@@ -7,11 +7,16 @@ const CASHTAG = 'Doominater1902';
 /** Dues posted on the 1st of every month. */
 const MONTHLY_DUES = 18.75;
 
+/** Colour disposition for a row in Payment history. Omit for a normal on-time payment. */
+export type PaymentStatus = 'paid' | 'late' | 'waived';
+
 export type Payment = {
   /** YYYY-MM-DD */
   date: string;
   amount: number;
   note?: string;
+  /** 'paid' (default) shows green, 'late' red, 'waived' grey. */
+  status?: PaymentStatus;
 };
 
 export type Member = {
@@ -29,13 +34,14 @@ export type Member = {
 // the month that has passed since, so these numbers stay correct on their own.
 // `payments` is the record shown under "Payment history" — it is display only and
 // does not affect `balance`, so log a payment AND adjust `balance`/`asOf` together.
+// Add `status: 'late'` to colour a row red, or `status: 'waived'` for grey. Default is green.
 const MEMBERS: Record<string, Member> = {
   'john-28ffb5f882': {
     name: 'John',
     balance: -145.25,
     asOf: '2026-09-01',
     payments: [
-      { date: '2026-09-01', amount: 0, note: 'Cash App' },
+      { date: '2026-09-01', amount: 0, note: 'Cash App', status: 'waived' },
       { date: '2026-08-01', amount: 180, note: 'Cash App' }
     ],
   },
@@ -67,7 +73,7 @@ const MEMBERS: Record<string, Member> = {
       { date: '2026-05-01', amount: 18, note: 'Monthly+Yearly(Covered by 18 instead of 16)' },
       { date: '2026-04-01', amount: 18, note: 'Cash App' },
       { date: '2026-03-01', amount: 18, note: 'Cash App' },
-      { date: '2026-02-01', amount: 0, note: 'Waived via SS Promo' },
+      { date: '2026-02-01', amount: 0, note: 'Waived via SS Promo', status: 'waived' },
       { date: '2026-01-01', amount: 18, note: 'Cash App' }
     ],
   },
@@ -92,7 +98,7 @@ const MEMBERS: Record<string, Member> = {
     balance: 5.5,
     asOf: '2026-09-01',
     payments: [
-      { date: '2026-09-01', amount: 0, note: 'Apple Pay' },
+      { date: '2026-09-01', amount: 0, note: 'Apple Pay', status: 'late' },
       { date: '2026-08-01', amount: 32, note: 'Apple Pay' },
       { date: '2026-07-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-06-01', amount: 16, note: 'Apple Pay' },
@@ -121,6 +127,12 @@ const MEMBERS: Record<string, Member> = {
   },
 };
 // ─────────────────────────────────────────────────────────────────────────────
+
+const STATUS_COLOR: Record<PaymentStatus, string> = {
+  paid: 'text-emerald-600',
+  late: 'text-red-600',
+  waived: 'text-slate-400',
+};
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const longDate = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -336,13 +348,15 @@ export default function Dues() {
           ) : (
             <>
               <ul className="divide-y divide-slate-100">
-                {history.list.map((pmt) => (
-                  <li key={pmt.date + pmt.amount} className="flex items-center justify-between py-3">
+                {history.list.map((pmt, i) => (
+                  <li key={`${pmt.date}-${i}`} className="flex items-center justify-between py-3">
                     <div>
                       <div className="font-medium text-slate-900">{longDate.format(pmt.on)}</div>
                       {pmt.note && <div className="text-slate-500 text-sm">{pmt.note}</div>}
                     </div>
-                    <div className="font-semibold text-emerald-600 whitespace-nowrap">
+                    <div
+                      className={`font-semibold whitespace-nowrap ${STATUS_COLOR[pmt.status ?? 'paid']}`}
+                    >
                       {currency.format(pmt.amount)}
                     </div>
                   </li>
