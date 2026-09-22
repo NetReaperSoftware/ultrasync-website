@@ -1,55 +1,122 @@
 import { useParams } from 'react-router-dom';
-import { CheckCircle2, QrCode, LinkIcon } from 'lucide-react';
+import { CheckCircle2, QrCode, Link as LinkIcon, CalendarClock } from 'lucide-react';
 import cashAppQr from '../assets/cashapp-qr.svg';
 
 const CASHTAG = 'Doominater1902';
 
-type Member = { name: string; owed: number };
+/** Dues posted on the 1st of every month. */
+const MONTHLY_DUES = 18.75;
 
-// Edit the amounts here, then commit and push — the site redeploys automatically.
-const MEMBERS: Record<string, Member> = {
-  'john-28ffb5f882': { name: 'John', owed: 0 },
-  'jesse-b754903054': { name: 'Jesse', owed: 19 },
-  'sarah-65e9f848a6': { name: 'Sarah', owed: 19 },
-  'michael-b999124566': { name: 'Michael', owed: 0 },
-  'austin-669736a1f9': { name: 'Austin', owed: 24.5 },
-  'thomas-aab9e0b9d4': { name: 'Thomas', owed: 19 },
+export type Member = {
+  name: string;
+  /** What they owed on `asOf`. Negative means they paid ahead (a credit). */
+  balance: number;
+  /** YYYY-MM-DD — the date you last checked this balance. Accrual starts from here. */
+  asOf: string;
 };
 
+// ── Edit these two fields per person, then commit and push. ───────────────────
+// `balance` is what they owed on `asOf`; the page adds $18.75 for every 1st of
+// the month that has passed since, so these numbers stay correct on their own.
+const MEMBERS: Record<string, Member> = {
+  'john-28ffb5f882': { name: 'John', balance: -145.25, asOf: '2026-09-21' },
+  'jesse-b754903054': { name: 'Jesse', balance: 19, asOf: '2026-09-21' },
+  'sarah-65e9f848a6': { name: 'Sarah', balance: 19, asOf: '2026-09-21' },
+  'michael-b999124566': { name: 'Michael', balance: 19, asOf: '2026-09-21' },
+  'austin-669736a1f9': { name: 'Austin', balance: 24.5, asOf: '2026-09-21' },
+  'thomas-aab9e0b9d4': { name: 'Thomas', balance: 19, asOf: '2026-09-21' },
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+const longDate = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const monthYear = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+/** Parse YYYY-MM-DD as a *local* date. `new Date('2026-09-01')` parses as UTC and can shift a day. */
+function parseLocalDate(iso: string): Date {
+  const [y, m, d] = iso.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** Months since year 0 — lets us count 1st-of-month charge dates with plain arithmetic. */
+const monthIndex = (d: Date) => d.getFullYear() * 12 + d.getMonth();
+
+const firstOfMonth = (mi: number) => new Date(Math.floor(mi / 12), mi % 12, 1);
+
+function startOfToday(): Date {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+export function computeDues(member: Member, today: Date) {
+  const asOf = parseLocalDate(member.asOf);
+
+  // Charges land on the 1st. The 1st of any date's own month is always <= that date,
+  // so the 1sts falling in (asOf, today] are exactly those of months
+  // monthIndex(asOf)+1 through monthIndex(today).
+  const monthsAccrued = Math.max(0, monthIndex(today) - monthIndex(asOf));
+  const owed = round2(member.balance + monthsAccrued * MONTHLY_DUES);
+
+  // A credit pays forward: each whole $18.75 covers one upcoming charge.
+  const credit = owed < 0 ? -owed : 0;
+  const monthsCovered = Math.floor(credit / MONTHLY_DUES);
+  const leftoverCredit = round2(credit - monthsCovered * MONTHLY_DUES);
+
+  const nextChargeDate = firstOfMonth(monthIndex(today) + 1 + monthsCovered);
+  // Day before the next charge — setDate(0) on the 1st rolls back to the previous month's end.
+  const paidThrough = new Date(nextChargeDate);
+  paidThrough.setDate(0);
+
+  return {
+    owed,
+    asOf,
+    monthsAccrued,
+    accrued: round2(monthsAccrued * MONTHLY_DUES),
+    credit,
+    leftoverCredit,
+    nextChargeDate,
+    nextChargeAmount: round2(MONTHLY_DUES - leftoverCredit),
+    paidThrough,
+  };
+}
+
+function LinkNotFound() {
+  return (
+    <div className="pt-16">
+      <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 py-24 text-white text-center">
+        <div className="max-w-2xl mx-auto px-4">
+          <h1 className="text-4xl font-bold mb-4">Link not found</h1>
+          <p className="text-lg text-white/80 leading-relaxed">
+            This balance link isn't valid. Double-check the link you were sent, or ask for a new one.
+          </p>
+        </div>
+      </section>
+
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex items-start gap-4">
+          <LinkIcon className="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5" />
+          <p className="text-slate-600 leading-relaxed">
+            Balance pages are private to each person, so they're only reachable through the exact link you were
+            given. Links are easy to break by copying them with a trailing character or a missing piece on the end.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Dues() {
   const { token } = useParams();
   const member = token ? MEMBERS[token] : undefined;
 
-  if (!member) {
-    return (
-      <div className="pt-16">
-        <section className="bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 py-24 text-white text-center">
-          <div className="max-w-2xl mx-auto px-4">
-            <h1 className="text-4xl font-bold mb-4">Link not found</h1>
-            <p className="text-lg text-white/80 leading-relaxed">
-              This balance link isn't valid. Double-check the link you were sent, or ask for a new one.
-            </p>
-          </div>
-        </section>
+  if (!member) return <LinkNotFound />;
 
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex items-start gap-4">
-            <LinkIcon className="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5" />
-            <p className="text-slate-600 leading-relaxed">
-              Balance pages are private to each person, so they're only reachable through the exact link you were
-              given. Links are easy to break by copying them with a trailing character or a missing piece on the end.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const isPaidUp = member.owed <= 0;
-  const amount = currency.format(member.owed);
-  const payUrl = `https://cash.app/$${CASHTAG}/${member.owed.toFixed(2)}`;
+  const d = computeDues(member, startOfToday());
+  const owesMoney = d.owed > 0;
+  const amount = currency.format(d.owed);
+  const payUrl = `https://cash.app/$${CASHTAG}/${d.owed.toFixed(2)}`;
 
   return (
     <div className="pt-16">
@@ -58,59 +125,100 @@ export default function Dues() {
         <div className="max-w-2xl mx-auto px-4">
           <h1 className="text-5xl font-bold mb-4">Hello, {member.name}</h1>
           <p className="text-xl text-white/90 leading-relaxed">
-            {isPaidUp ? 'Your gym dues are settled.' : 'Here’s your current gym dues balance.'}
+            {owesMoney ? 'Here’s your current gym dues balance.' : 'Your gym dues are settled.'}
           </p>
         </div>
       </section>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-8">
-        {/* Balance */}
-        {isPaidUp ? (
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-10 text-center border border-emerald-100">
-            <CheckCircle2 className="w-14 h-14 text-emerald-500 mx-auto mb-4" />
-            <h2 className="text-3xl font-bold text-slate-900 mb-2">You're all paid up</h2>
-            <p className="text-slate-600">Nothing owed right now — thanks!</p>
-          </div>
-        ) : (
+        {owesMoney ? (
+          /* ── Owes money ─────────────────────────────────────────────── */
           <div className="bg-white rounded-2xl p-10 text-center shadow-lg border border-slate-100">
             <p className="text-slate-500 font-medium uppercase tracking-wide text-sm mb-3">Balance due</p>
             <div className="text-6xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent mb-2">
               {amount}
             </div>
             <p className="text-slate-600">Gym dues</p>
+
+            {d.monthsAccrued > 0 && (
+              <div className="mt-8 pt-6 border-t border-slate-100 text-sm text-slate-500 space-y-1">
+                <div className="flex justify-between">
+                  <span>Balance on {longDate.format(d.asOf)}</span>
+                  <span className="font-medium text-slate-700">{currency.format(member.balance)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>
+                    Monthly dues since then ({d.monthsAccrued} × {currency.format(MONTHLY_DUES)})
+                  </span>
+                  <span className="font-medium text-slate-700">+{currency.format(d.accrued)}</span>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* ── Paid up, possibly with credit ───────────────────────────── */
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-10 text-center border border-emerald-100">
+            <CheckCircle2 className="w-14 h-14 text-emerald-500 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-2">You're all paid up</h2>
+
+            {d.credit > 0 ? (
+              <>
+                <p className="text-slate-600 mb-6">
+                  You're <span className="font-semibold text-emerald-700">{currency.format(d.credit)}</span> ahead.
+                </p>
+                <div className="inline-flex items-center gap-2 bg-white rounded-full px-5 py-2.5 border border-emerald-100 shadow-sm">
+                  <CalendarClock className="w-4 h-4 text-emerald-600" />
+                  <span className="text-slate-700 font-semibold">
+                    Paid through {monthYear.format(d.paidThrough)}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <p className="text-slate-600">Nothing owed right now — thanks!</p>
+            )}
+
+            <p className="text-slate-500 text-sm mt-6">
+              Next {currency.format(d.nextChargeAmount)} due {longDate.format(d.nextChargeDate)}
+              {d.leftoverCredit > 0 && ` (${currency.format(d.leftoverCredit)} credit applied)`}
+            </p>
           </div>
         )}
 
         {/* Pay */}
-        {!isPaidUp && (
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">Pay with Cash App</h2>
-            <p className="text-slate-600 mb-8">
-              Tap the button on your phone, or scan the code from another device.
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            {owesMoney ? 'Pay with Cash App' : 'Want to pay ahead?'}
+          </h2>
+          <p className="text-slate-600 mb-8">
+            Tap the button on your phone, or scan the code from another device.
+          </p>
+
+          <a
+            href={owesMoney ? payUrl : `https://cash.app/$${CASHTAG}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-teal-500/30 transition-all duration-300 transform hover:-translate-y-0.5"
+          >
+            {owesMoney ? `Pay ${amount} on Cash App` : 'Open Cash App'}
+          </a>
+
+          <div className="mt-10">
+            <img
+              src={cashAppQr}
+              alt={`Cash App QR code for $${CASHTAG}`}
+              className="w-56 h-56 mx-auto rounded-2xl overflow-hidden shadow-md"
+            />
+            <p className="flex items-center justify-center gap-2 text-slate-500 text-sm mt-4">
+              <QrCode className="w-4 h-4" />
+              <span>${CASHTAG}</span>
             </p>
-
-            <a
-              href={payUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-teal-500/30 transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              Pay {amount} on Cash App
-            </a>
-
-            <div className="mt-10">
-              <img
-                src={cashAppQr}
-                alt={`Cash App QR code for $${CASHTAG}`}
-                className="w-56 h-56 mx-auto rounded-2xl overflow-hidden shadow-md"
-              />
-              <p className="flex items-center justify-center gap-2 text-slate-500 text-sm mt-4">
-                <QrCode className="w-4 h-4" />
-                <span>${CASHTAG}</span>
-              </p>
-            </div>
           </div>
-        )}
+        </div>
+
+        <p className="text-center text-slate-400 text-sm">
+          Balance last updated {longDate.format(d.asOf)} · Dues are {currency.format(MONTHLY_DUES)} on the 1st of
+          each month
+        </p>
       </div>
     </div>
   );
