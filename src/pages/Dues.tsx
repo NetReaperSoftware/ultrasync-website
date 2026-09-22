@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { CheckCircle2, QrCode, Link as LinkIcon, CalendarClock } from 'lucide-react';
+import { CheckCircle2, QrCode, Link as LinkIcon, CalendarClock, Receipt } from 'lucide-react';
 import cashAppQr from '../assets/cashapp-qr.svg';
 
 const CASHTAG = 'Doominater1902';
@@ -7,24 +7,118 @@ const CASHTAG = 'Doominater1902';
 /** Dues posted on the 1st of every month. */
 const MONTHLY_DUES = 18.75;
 
+export type Payment = {
+  /** YYYY-MM-DD */
+  date: string;
+  amount: number;
+  note?: string;
+};
+
 export type Member = {
   name: string;
   /** What they owed on `asOf`. Negative means they paid ahead (a credit). */
   balance: number;
   /** YYYY-MM-DD — the date you last checked this balance. Accrual starts from here. */
   asOf: string;
+  /** Payments received. The page shows the last 6 months; older entries are kept but hidden. */
+  payments: Payment[];
 };
 
-// ── Edit these two fields per person, then commit and push. ───────────────────
+// ── Edit these per person, then commit and push. ──────────────────────────────
 // `balance` is what they owed on `asOf`; the page adds $18.75 for every 1st of
 // the month that has passed since, so these numbers stay correct on their own.
+// `payments` is the record shown under "Payment history" — it is display only and
+// does not affect `balance`, so log a payment AND adjust `balance`/`asOf` together.
 const MEMBERS: Record<string, Member> = {
-  'john-28ffb5f882': { name: 'John', balance: -145.25, asOf: '2026-09-21' },
-  'jesse-b754903054': { name: 'Jesse', balance: 19, asOf: '2026-09-21' },
-  'sarah-65e9f848a6': { name: 'Sarah', balance: 19, asOf: '2026-09-21' },
-  'michael-b999124566': { name: 'Michael', balance: 19, asOf: '2026-09-21' },
-  'austin-669736a1f9': { name: 'Austin', balance: 24.5, asOf: '2026-09-21' },
-  'thomas-aab9e0b9d4': { name: 'Thomas', balance: 19, asOf: '2026-09-21' },
+  'john-28ffb5f882': {
+    name: 'John',
+    balance: -145.25,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 0, note: 'Cash App' },
+      { date: '2026-08-01', amount: 180, note: 'Cash App' }
+    ],
+  },
+  'jesse-b754903054': {
+    name: 'Jesse',
+    balance: 0,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 19, note: 'Cash App' },
+      { date: '2026-08-01', amount: 16, note: 'Cash App' },
+      { date: '2026-07-01', amount: 16, note: 'Cash App' },
+      { date: '2026-06-01', amount: 18, note: 'Cash App' },
+      { date: '2026-05-01', amount: 36, note: 'Monthly+Yearly' },
+      { date: '2026-04-01', amount: 16, note: 'Cash App' },
+      { date: '2026-03-01', amount: 16, note: 'Cash App' },
+      { date: '2026-02-01', amount: 18, note: 'Cash App' },
+      { date: '2026-01-01', amount: 16, note: 'Cash App' }
+    ],
+  },
+  'sarah-65e9f848a6': {
+    name: 'Sarah',
+    balance: 0,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 18, note: 'Cash App' },
+      { date: '2026-08-01', amount: 18, note: 'Cash App' },
+      { date: '2026-07-01', amount: 18, note: 'Cash App' },
+      { date: '2026-06-01', amount: 18, note: 'Cash App' },
+      { date: '2026-05-01', amount: 18, note: 'Monthly+Yearly(Covered by 18 instead of 16)' },
+      { date: '2026-04-01', amount: 18, note: 'Cash App' },
+      { date: '2026-03-01', amount: 18, note: 'Cash App' },
+      { date: '2026-02-01', amount: 0, note: 'Waived via SS Promo' },
+      { date: '2026-01-01', amount: 18, note: 'Cash App' }
+    ],
+  },
+  'michael-b999124566': {
+    name: 'Michael',
+    balance: 0,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 19, note: 'Cash App' },
+      { date: '2026-08-01', amount: 15, note: 'Cash App' },
+      { date: '2026-07-01', amount: 15, note: 'Cash App' },
+      { date: '2026-06-01', amount: 15, note: 'Cash App' },
+      { date: '2026-05-01', amount: 35, note: 'Monthly+Yearly' },
+      { date: '2026-04-01', amount: 15, note: 'Cash App' },
+      { date: '2026-03-01', amount: 15, note: 'Cash App' },
+      { date: '2026-02-01', amount: 16, note: 'Cash App' },
+      { date: '2026-01-01', amount: 16, note: 'Cash App' }
+    ],
+  },
+  'austin-669736a1f9': {
+    name: 'Austin',
+    balance: 5.5,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 0, note: 'Apple Pay' },
+      { date: '2026-08-01', amount: 32, note: 'Apple Pay' },
+      { date: '2026-07-01', amount: 16, note: 'Apple Pay' },
+      { date: '2026-06-01', amount: 16, note: 'Apple Pay' },
+      { date: '2026-05-01', amount: 36, note: 'Monthly+Yearly' },
+      { date: '2026-04-01', amount: 16, note: 'Apple Pay' },
+      { date: '2026-03-01', amount: 16, note: 'Apple Pay' },
+      { date: '2026-02-01', amount: 16, note: 'Apple Pay' },
+      { date: '2026-01-01', amount: 16, note: 'Apple Pay' }
+    ],
+  },
+  'thomas-aab9e0b9d4': {
+    name: 'Thomas',
+    balance: 0,
+    asOf: '2026-09-01',
+    payments: [
+      { date: '2026-09-01', amount: 20.75, note: 'Cash App' },
+      { date: '2026-08-01', amount: 18, note: 'Cash App' },
+      { date: '2026-07-01', amount: 18, note: 'Cash App' },
+      { date: '2026-06-01', amount: 18, note: 'Cash App' },
+      { date: '2026-05-01', amount: 18, note: 'Monthly+Yearly(Covered by 18 instead of 16)' },
+      { date: '2026-04-01', amount: 18, note: 'Cash App' },
+      { date: '2026-03-01', amount: 18, note: 'Cash App' },
+      { date: '2026-02-01', amount: 18, note: 'Cash App' },
+      { date: '2026-01-01', amount: 18, note: 'Cash App' }
+    ],
+  },
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -48,6 +142,16 @@ const firstOfMonth = (mi: number) => new Date(Math.floor(mi / 12), mi % 12, 1);
 function startOfToday(): Date {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+/** Payments in the rolling 6 months up to `today`, newest first, plus their total. */
+export function recentPayments(member: Member, today: Date) {
+  const cutoff = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
+  const list = member.payments
+    .map((pmt) => ({ ...pmt, on: parseLocalDate(pmt.date) }))
+    .filter((pmt) => pmt.on >= cutoff && pmt.on <= today)
+    .sort((a, b) => b.on.getTime() - a.on.getTime());
+  return { list, total: round2(list.reduce((sum, pmt) => sum + pmt.amount, 0)), cutoff };
 }
 
 export function computeDues(member: Member, today: Date) {
@@ -113,7 +217,9 @@ export default function Dues() {
 
   if (!member) return <LinkNotFound />;
 
-  const d = computeDues(member, startOfToday());
+  const today = startOfToday();
+  const d = computeDues(member, today);
+  const history = recentPayments(member, today);
   const owesMoney = d.owed > 0;
   const amount = currency.format(d.owed);
   const payUrl = `https://cash.app/$${CASHTAG}/${d.owed.toFixed(2)}`;
@@ -213,6 +319,43 @@ export default function Dues() {
               <span>${CASHTAG}</span>
             </p>
           </div>
+        </div>
+
+        {/* Payment history */}
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100">
+          <div className="flex items-baseline justify-between mb-6">
+            <h2 className="text-2xl font-bold text-slate-900">Payment history</h2>
+            <span className="text-slate-500 text-sm">Last 6 months</span>
+          </div>
+
+          {history.list.length === 0 ? (
+            <div className="flex items-start gap-3 text-slate-500">
+              <Receipt className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <p>No payments recorded in the last 6 months.</p>
+            </div>
+          ) : (
+            <>
+              <ul className="divide-y divide-slate-100">
+                {history.list.map((pmt) => (
+                  <li key={pmt.date + pmt.amount} className="flex items-center justify-between py-3">
+                    <div>
+                      <div className="font-medium text-slate-900">{longDate.format(pmt.on)}</div>
+                      {pmt.note && <div className="text-slate-500 text-sm">{pmt.note}</div>}
+                    </div>
+                    <div className="font-semibold text-emerald-600 whitespace-nowrap">
+                      {currency.format(pmt.amount)}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex items-center justify-between pt-4 mt-2 border-t-2 border-slate-100">
+                <span className="font-semibold text-slate-900">
+                  Total paid ({history.list.length} payment{history.list.length === 1 ? '' : 's'})
+                </span>
+                <span className="font-bold text-slate-900">{currency.format(history.total)}</span>
+              </div>
+            </>
+          )}
         </div>
 
         <p className="text-center text-slate-400 text-sm">
