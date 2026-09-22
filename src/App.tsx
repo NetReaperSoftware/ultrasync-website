@@ -10,6 +10,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
 import ResetPassword from './pages/ResetPassword';
 import ConfirmEmail from './pages/ConfirmEmail';
+import Dues from './pages/Dues';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -34,6 +35,8 @@ function App() {
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/confirm-email" element={<ConfirmEmail />} />
+          <Route path="/dues" element={<Dues />} />
+          <Route path="/dues/:token" element={<Dues />} />
         </Route>
       </Routes>
     </BrowserRouter>
