@@ -114,6 +114,7 @@ const MEMBERS: Record<string, Member> = {
     balance: 0,
     asOf: '2026-09-01',
     payments: [
+      { date: '2026-09-28', amount: 21, note: 'Cash App' },
       { date: '2026-09-01', amount: 20.75, note: 'Cash App' },
       { date: '2026-08-01', amount: 18, note: 'Cash App' },
       { date: '2026-07-01', amount: 18, note: 'Cash App' },
