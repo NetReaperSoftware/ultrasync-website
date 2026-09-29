@@ -1,17 +1,17 @@
-# FitSync Privacy Policy
+# UltraSync Privacy Policy
 
-**Last Updated: January 19, 2025**
+**Last Updated: October 14, 2026**
 
 ## Introduction
 
-FitSync ("we," "our," or "us") is committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, store, and protect your information when you use the FitSync mobile application (the "App").
+UltraSync ("we," "our," or "us") is committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, store, and protect your information when you use the UltraSync mobile application (the "App").
 
-By using FitSync, you agree to the collection and use of information in accordance with this Privacy Policy. If you do not agree with our policies and practices, please do not use our App.
+By using UltraSync, you agree to the collection and use of information in accordance with this Privacy Policy. If you do not agree with our policies and practices, please do not use our App.
 
 ## Contact Information
 
-**FitSync Development Team**  
-Email: support@fitsync.app
+**UltraSync Development Team**  
+Email: support@UltraSync.app
 
 For privacy-related inquiries, please contact us at the email address above.
 
@@ -26,6 +26,10 @@ We collect the following personal information that you voluntarily provide:
 - **Activity Level**: Your self-reported activity level for personalized caloric expenditure calculations
 - **Fitness Goals**: Your selected fitness objectives (weight loss, muscle gain, etc.)
 - **Experience Level**: Your fitness experience level for workout recommendations
+- **Account Information**: Your name and email address, used to create and manage your account. Your email address is never shown to other users
+- **Social Profile**: If you set one up, your username, profile photo, and who you follow and who follows you
+- **Workout Photos**: Photos you choose to attach to your workouts
+- **Likes and Comments**: Likes and comments you post on other users' workouts
 
 ### 2. Health and Fitness Data
 With your explicit consent, we collect and process:
@@ -37,28 +41,28 @@ With your explicit consent, we collect and process:
 - **Body Composition**: Weight tracking and BMI calculations over time
 
 ### 3. Location Information
-When you enable location services for cardio tracking features:
+When you start an outdoor cardio workout and allow location access:
 
-- **GPS Coordinates**: Real-time location data during outdoor cardio activities
-- **Route Information**: Path taken during runs, walks, or cycling sessions
-- **Elevation Data**: Altitude changes during activities for distance and intensity calculations
-- **Speed and Pace**: Movement speed calculated from GPS data
-- **Distance**: Total distance traveled during activities
+- **GPS Coordinates**: Your location during the workout, including while your phone is locked or the app is in the background
+- **Route Information**: The path you take during runs, walks, rides, and other outdoor activities
+- **Elevation Data**: Altitude changes, for distance and intensity calculations
+- **Speed and Pace**: Calculated from GPS data
+- **Distance**: Total distance traveled during the workout
+
+Location is collected only while a cardio workout is being tracked. See Location Services and GPS Privacy below.
 
 ### 4. Device and Usage Information
 We automatically collect:
 
 - **Device Information**: Device type, operating system version, app version
-- **Usage Analytics**: App usage patterns, feature interactions, and performance metrics
-- **Crash Reports**: Technical information to diagnose and fix app issues
 - **Settings and Preferences**: Your app configuration and customization choices
 
 ### 5. Third-Party Health Platform Data
-With your permission, we may access data from:
+With your permission, we read data from your device's health platform. UltraSync does not write any data to these platforms.
 
-- **Apple Health (iOS)**: Step count, caloric burn, and other health metrics
-- **Google Fit (Android)**: Activity data, step count, and health measurements
-- **Connected Fitness Devices**: Data from smartwatches and fitness trackers
+- **Apple Health (iOS)**: Step count, active and resting energy burned, height, weight, date of birth, biological sex, and swimming workouts and distance
+- **Health Connect (Android)**: Step count
+- **Smartwatches and Fitness Trackers**: Only data those devices have already saved to Apple Health or Health Connect; UltraSync does not connect to them directly
 
 ## How We Use Your Information
 
@@ -69,7 +73,7 @@ We use your information to:
 2. **Track Progress**: Monitor your fitness journey, weight changes, and goal achievement
 3. **Generate Recommendations**: Create personalized workout routines and nutrition suggestions
 4. **Calculate Metrics**: Compute calories burned, distance traveled, pace, and elevation changes
-5. **Sync Health Data**: Integrate with Apple Health and Google Fit for comprehensive tracking
+5. **Sync Health Data**: Read steps, energy burned, and body measurements from Apple Health or Health Connect
 
 ### Secondary Uses
 We may also use your information to:
@@ -91,35 +95,57 @@ We may also use your information to:
 We implement appropriate technical and organizational measures to protect your data:
 
 - **Access Controls**: Role-based access limitations for our development team
-- **Regular Security Audits**: Periodic security assessments and vulnerability testing
 - **Data Minimization**: We collect only the data necessary for app functionality
 - **Secure Development**: Following security best practices in app development
 
 ## Third-Party Services
 
-### Apple Health Integration
-- **Purpose**: Sync step count, caloric burn, and other health metrics
-- **Data Shared**: Only health data you explicitly authorize
-- **Apple's Privacy**: Governed by Apple's Health app privacy policy
-- **User Control**: You can revoke access at any time through iOS Settings
+We use the following service providers to run UltraSync. Each receives only the data it needs for the purpose listed, and its handling of that data is governed by its own privacy policy.
 
-### Google Fit Integration  
-- **Purpose**: Access activity data and health metrics on Android devices
-- **Data Shared**: Only fitness data you specifically authorize
-- **Google's Privacy**: Subject to Google's privacy policies
-- **User Control**: Manage permissions through Google account settings
+### Apple Health (iOS)
+- **Purpose**: Read steps, energy burned, body measurements, and swimming workouts
+- **Data Shared**: Health data stays on your device until you grant UltraSync permission to read it; UltraSync does not send data to Apple Health
+- **User Control**: Revoke access at any time in the iOS Settings or Health app
 
-### MapBox Services
-- **Purpose**: Provide mapping, route calculation, and location services for cardio tracking
-- **Data Shared**: GPS coordinates, route information, and location data during active tracking
-- **MapBox Privacy**: Governed by MapBox's privacy policy
-- **User Control**: Disable location services in app settings to opt out
+### Health Connect (Android)
+- **Purpose**: Read your daily step count
+- **Data Shared**: UltraSync reads step data only and does not write to Health Connect
+- **User Control**: Revoke access at any time in Health Connect settings
 
-### Supabase Backend Services
-- **Purpose**: Secure data storage, user authentication, and real-time data synchronization
-- **Data Processing**: All personal and health data storage
-- **Security**: SOC 2 Type 2 certified with enterprise-grade security
-- **Data Location**: Data stored in secure, compliant data centers
+### Supabase
+- **Purpose**: Account sign-in, and storage and syncing of your profile, fitness, nutrition, workout, route, and social data
+- **Data Shared**: All data you store in your UltraSync account
+- **Security**: SOC 2 Type 2 certified, with data encrypted in transit and at rest
+
+### Mapbox
+- **Purpose**: Maps and route display during and after cardio workouts
+- **Data Shared**: Your location and the map areas you view, when a map is shown. Mapbox's software may also collect anonymous usage and location information as described in Mapbox's privacy policy
+- **User Control**: Maps are only shown on cardio screens; deny location access to stop location-based maps
+
+### Cloudinary
+- **Purpose**: Storing and delivering profile photos and workout photos
+- **Data Shared**: Photos you upload as your profile photo or attach to workouts
+
+### Anthropic
+- **Purpose**: Analyzing meal photos when you use meal scanning, to estimate foods and nutrition
+- **Data Shared**: The meal photo you take or choose. Photos are sent for analysis and are not stored by UltraSync; we keep only a record that a scan was made, for usage limits
+
+### FatSecret and USDA FoodData Central
+- **Purpose**: Food search, barcode lookups, and nutrition information
+- **Data Shared**: Your search terms and scanned barcodes. These requests do not include your name, email, or account details
+
+### Firebase Cloud Messaging (Google)
+- **Purpose**: Push notifications, such as new followers, follow requests, likes, and comments
+- **Data Shared**: A device token that identifies your device for notifications, and the notification content
+- **User Control**: Turn off notifications in the app or your device settings
+
+### RevenueCat, Apple App Store, and Google Play
+- **Purpose**: Premium subscriptions and purchases
+- **Data Shared**: Your UltraSync account ID and your purchase and subscription status. Payment details are handled by Apple or Google and are never shared with UltraSync
+
+### Email Delivery
+- **Purpose**: Account emails, such as email confirmation and password resets
+- **Data Shared**: Your email address and the content of the email
 
 ## Data Sharing and Disclosure
 
@@ -134,9 +160,36 @@ We may disclose your information only when:
 3. **Business Transfers**: In connection with a merger, acquisition, or sale of assets (with user notification)
 4. **Consent**: With your explicit, informed consent
 5. **Service Providers**: To trusted third-party service providers bound by confidentiality agreements
+6. **Social Features**: Information you choose to make visible to other users or on your public profile page, as described in Social Features and Public Profiles
 
 ### Aggregated Data
 We may share aggregated, anonymized data that cannot identify individual users for research or analytics purposes.
+
+## Social Features and Public Profiles
+
+UltraSync includes optional social features. You choose how visible you are.
+
+### Your Social Profile
+If you create a username, other users can find you by it and see your username, profile photo, and follower and following counts. Your email address is never shown.
+
+### Public and Private Profiles
+- **Public profile** (Private Profile off): Anyone can follow you without approval. Your profile is also available on the web at www.ultrasync.app/user/USERNAME, where anyone, including people without the app, can see your username, name, profile photo, and follower and following counts. If your Workout Visibility is set to Everyone, the page also shows your total number of workouts and your most recent strength workout (its exercises, sets, reps, weights, duration, and calories). Workout notes, photos, and location data are never shown on the web.
+- **Private profile** (Private Profile on): New followers must be approved, only approved followers can see your content in the app, and no profile page is shown on the web.
+
+### Workout Visibility
+- **Everyone**: People who can view your profile in the app can see your workouts, workout photos, stats, muscle split, weekly training time, and routines. They can also like and comment on your workouts and save copies of your workouts and routines to their own account.
+- **Private**: Only you can see your workouts, routines, and stats. Others can still follow you.
+
+### Likes and Comments
+Likes and comments you post are visible to anyone who can see the workout you posted them on.
+
+### Sharing, Reporting, and Blocking
+You can share a link to your profile or another user's profile. You can block any user; a blocked user can't find, view, or follow you.
+
+You can report a user, a workout, or a comment. We keep each report, including who sent it and a copy of the reported content, so we can review it. The reported user is not told who reported them.
+
+### Public Web Pages
+Information shown on your public web profile can be seen, and may be copied or saved, by anyone, including search engines. Making your profile private removes the page, but we can't remove copies other people or services have already made.
 
 ## Your Privacy Rights
 
@@ -151,64 +204,65 @@ You have the right to:
 - **Restriction**: Request limitation of processing activities
 
 ### Exercising Your Rights
-To exercise these rights, contact us at support@fitsync.app. We will respond within 30 days of receiving your request.
+To exercise these rights, contact us at support@UltraSync.app. We will respond within 30 days of receiving your request.
 
 ### Account Management
 You can also:
 - Update profile information directly in the app
 - Manage third-party integrations in app settings
 - Control location sharing preferences
+- Make your profile public or private (Settings → Privacy & Social → Private Profile)
+- Choose who can see your workouts, routines, and stats (Settings → Privacy & Social → Default Workout Visibility)
+- Block other users
 - Delete your account and associated data
 
 ## Data Retention
 
 ### Retention Periods
 - **Account Data**: Retained while your account is active
-- **Health and Fitness Data**: Stored for the duration of your account plus 90 days after deletion
-- **Location Data**: Automatically deleted after 2 years unless you delete it sooner
-- **Usage Analytics**: Aggregated data retained for up to 3 years for improvement purposes
+- **Health and Fitness Data**: Stored for as long as your account exists
+- **Location Data**: Kept with its cardio workout until you delete the workout or your account
 - **Legal Requirements**: Some data may be retained longer if required by law
 
 ### Deletion Process
 When you delete your account:
 1. Personal data is immediately marked for deletion
 2. Data is permanently removed from active systems within 30 days
-3. Backup systems are purged within 90 days
-4. Some aggregated, anonymized data may be retained for analytics
+3. Some aggregated, anonymized data may be retained for analytics
 
 ## Location Services and GPS Privacy
 
 ### Location Data Collection
-When you enable location services for cardio tracking:
-
-- **Real-time Tracking**: GPS coordinates collected only during active workout sessions
-- **Route Recording**: Path data stored locally and optionally synced to your account
-- **Precision**: Location accuracy depends on device capabilities and GPS signal strength
-- **Background Access**: Location accessed only when the app is in use, not continuously
+- **Only During Workouts**: Location is tracked only after you start an outdoor cardio workout, and tracking stops when you finish or discard it
+- **Background Tracking**: So your route stays accurate, tracking continues while your phone is locked, the app is in the background, or the app has been closed during a workout. On iOS this requires "Always" location access, and on Android background location access
+- **Saving Routes**: Your route is kept on your device during the workout and saved to your account when you save the workout
+- **Precision**: Accuracy depends on your device and GPS signal strength
 
 ### Location Data Use
-Your location information is used exclusively to:
-- Calculate distance, pace, and elevation during cardio activities
+Your location information is used only to:
+- Calculate distance, pace, speed, and elevation during cardio workouts
 - Display route maps and workout summaries
-- Provide real-time feedback during activities
+- Provide real-time feedback during workouts
 - Generate activity statistics and progress reports
+
+Your location and routes are never shown to other users or on your public web profile.
 
 ### Location Controls
 You can:
-- Enable/disable location services in device settings
-- Control location sharing per workout session
-- Delete location data from individual workouts
-- View and manage all stored route data
+- Allow or deny location access at any time in your device settings
+- Choose not to track a cardio workout
+- Delete a cardio workout, which also deletes its route
+- View your saved routes in the app
 
 ## Health Data Protection
 
 ### HIPAA Considerations
-While FitSync is not a covered entity under HIPAA, we implement HIPAA-level protections for your health data:
+While UltraSync is not a covered entity under HIPAA, we implement HIPAA-level protections for your health data:
 
 - **Minimum Necessary**: Access limited to data required for app functionality
 - **Administrative Safeguards**: Policies governing data access and handling
 - **Physical Safeguards**: Secure infrastructure and access controls
-- **Technical Safeguards**: Encryption, audit logs, and access monitoring
+- **Technical Safeguards**: Encryption and access controls
 
 ### Health Data Sensitivity
 We recognize the sensitive nature of health information and:
@@ -220,11 +274,11 @@ We recognize the sensitive nature of health information and:
 ## Children's Privacy (COPPA Compliance)
 
 ### Age Restrictions
-FitSync is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.
+UltraSync is not intended for children under 13 years of age. We do not knowingly collect personal information from children under 13.
 
 ### Parental Rights
 If you are a parent and believe your child has provided personal information to us:
-- Contact us immediately at support@fitsync.app
+- Contact us immediately at support@UltraSync.app
 - We will delete the information promptly upon verification
 - We will implement additional safeguards to prevent future collection
 
@@ -240,7 +294,6 @@ For users aged 13-17:
 If you are located in the EU, you have additional rights under the General Data Protection Regulation (GDPR):
 
 - **Lawful Basis**: We process data based on consent, legitimate interests, or contract performance
-- **Data Protection Officer**: Contact information provided upon request
 - **Supervisory Authority**: Right to lodge complaints with your local data protection authority
 - **Cross-border Transfers**: Data transfers comply with GDPR adequacy requirements
 
@@ -266,7 +319,7 @@ If you are a California resident, you have specific rights under the California 
 - **Right to Non-Discrimination**: Equal service and pricing regardless of privacy choices
 
 ### Exercising CCPA Rights
-California residents can exercise these rights by contacting us at support@fitsync.app with "CCPA Request" in the subject line.
+California residents can exercise these rights by contacting us at support@UltraSync.app with "CCPA Request" in the subject line.
 
 ## Changes to This Privacy Policy
 
@@ -293,14 +346,14 @@ We will provide enhanced notice for:
 ### Privacy Inquiries
 For questions, concerns, or requests related to this Privacy Policy, contact us:
 
-**Email**: support@fitsync.app
+**Email**: support@UltraSync.app
 **Subject Line**: "Privacy Policy Inquiry"  
 **Response Time**: We respond to privacy inquiries within 5 business days
 
 ### Data Protection Requests
 For specific data protection requests (access, deletion, correction):
 
-**Email**: support@fitsync.app  
+**Email**: support@UltraSync.app  
 **Subject Line**: "Data Protection Request"  
 **Required Information**: 
 - Full name associated with the account
@@ -311,13 +364,13 @@ For specific data protection requests (access, deletion, correction):
 ### Technical Support
 For technical issues unrelated to privacy:
 
-**Email**: support@fitsync.app  
+**Email**: support@UltraSync.app  
 **In-App**: Use the "Contact Support" feature in app settings
 
 ---
 
-**Document Version**: 1.0  
-**Effective Date**: January 19, 2025  
+**Document Version**: 1.1  
+**Effective Date**: October 14, 2026  
 **Review Schedule**: This policy is reviewed annually and updated as necessary to maintain compliance and transparency.
 
-By using FitSync, you acknowledge that you have read, understood, and agree to this Privacy Policy.
+By using UltraSync, you acknowledge that you have read, understood, and agree to this Privacy Policy.
