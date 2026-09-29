@@ -1,11 +1,36 @@
 import { useParams } from 'react-router-dom';
-import { CheckCircle2, QrCode, Link as LinkIcon, CalendarClock, Receipt } from 'lucide-react';
+import { CheckCircle2, QrCode, Link as LinkIcon, CalendarClock, Receipt, BellRing, CalendarCheck } from 'lucide-react';
 import cashAppQr from '../assets/cashapp-qr.svg';
 
 const CASHTAG = 'Doominater1902';
 
-/** Dues posted on the 1st of every month. */
-const MONTHLY_DUES = 18.75;
+/** A monthly dues price, in effect from `from`'s month onward. */
+export type Rate = {
+  /** YYYY-MM-DD — first month this price is charged. */
+  from: string;
+  amount: number;
+};
+
+/**
+ * Monthly dues history, oldest first, posted on the 1st of every month.
+ * When the price changes, add a row — never edit an old one, or past months get re-priced.
+ */
+const DUES_RATES: Rate[] = [
+  { from: '2026-01-01', amount: 16 },
+  { from: '2026-09-01', amount: 18.75 },
+];
+
+/** The yearly fee, due on the 1st of `month` (1 = January). What it costs depends on the member's `feePlan`. */
+const ANNUAL_FEE = {
+  month: 2,
+  /** Paid in one lump each February. */
+  yearly: 20,
+  /** Spread over 12 monthly installments — includes a convenience fee for paying over time. */
+  installments: 24,
+};
+
+/** 'yearly' pays the annual fee in one go each February; 'installments' adds 1/12 of it to every month's dues. */
+export type FeePlan = 'yearly' | 'installments';
 
 /** Colour disposition for a row in Payment history. Omit for a normal on-time payment. */
 export type PaymentStatus = 'paid' | 'late' | 'waived';
@@ -15,31 +40,42 @@ export type Payment = {
   date: string;
   amount: number;
   note?: string;
-  /** 'paid' (default) shows green, 'late' red, 'waived' grey. */
+  /** 'paid' (default) shows green, 'late' red, 'waived' grey. Display only. */
   status?: PaymentStatus;
+};
+
+/** A one-off change to what someone owes. Positive adds a charge, negative is a credit (e.g. a waived month). */
+export type Adjustment = {
+  /** YYYY-MM-DD — takes effect once this date has passed. */
+  date: string;
+  amount: number;
+  note: string;
 };
 
 export type Member = {
   name: string;
-  /** What they owed on `asOf`. Negative means they paid ahead (a credit). */
-  balance: number;
-  /** YYYY-MM-DD — the date you last checked this balance. Accrual starts from here. */
-  asOf: string;
-  /** Payments received. Every entry is shown, newest first — trim the list to shorten the history. */
+  /** YYYY-MM-DD — first month they're charged dues for. Installment years run in 12-month cycles from here. */
+  since: string;
+  feePlan: FeePlan;
+  /** Every payment received. The balance is computed from these, so log every payment here. */
   payments: Payment[];
+  adjustments?: Adjustment[];
+  /** Per-person price schedule, replacing DUES_RATES for this member only. */
+  rates?: Rate[];
 };
 
 // ── Edit these per person, then commit and push. ──────────────────────────────
-// `balance` is what they owed on `asOf`; the page adds $18.75 for every 1st of
-// the month that has passed since, so these numbers stay correct on their own.
-// `payments` is the record shown under "Payment history" — it is display only and
-// does not affect `balance`, so log a payment AND adjust `balance`/`asOf` together.
+// The balance is worked out automatically: every monthly charge since `since` (at
+// whatever DUES_RATES price applied that month), plus the annual fee (each February
+// on the 'yearly' plan, or $2 a month on 'installments'), plus any `adjustments`,
+// minus every entry in `payments`. To record a payment, just add
+// it to `payments`. To waive a month, add an adjustment with a negative amount.
 // Add `status: 'late'` to colour a row red, or `status: 'waived'` for grey. Default is green.
 const MEMBERS: Record<string, Member> = {
   'john-28ffb5f882': {
     name: 'John',
-    balance: -145.25,
-    asOf: '2026-09-01',
+    since: '2026-08-01',
+    feePlan: 'yearly',
     payments: [
       { date: '2026-09-01', amount: 0, note: 'Cash App', status: 'waived' },
       { date: '2026-08-01', amount: 180, note: 'Cash App' }
@@ -47,14 +83,15 @@ const MEMBERS: Record<string, Member> = {
   },
   'jesse-b754903054': {
     name: 'Jesse',
-    balance: 0,
-    asOf: '2026-09-01',
+    since: '2026-01-01',
+    feePlan: 'yearly',
     payments: [
       { date: '2026-09-01', amount: 19, note: 'Cash App' },
       { date: '2026-08-01', amount: 16, note: 'Cash App' },
       { date: '2026-07-01', amount: 16, note: 'Cash App' },
       { date: '2026-06-01', amount: 18, note: 'Cash App' },
-      { date: '2026-05-01', amount: 36, note: 'Monthly+Yearly' },
+      { date: '2026-05-01', amount: 20, note: 'Yearly fee' },
+      { date: '2026-05-01', amount: 16, note: 'Cash App' },
       { date: '2026-04-01', amount: 16, note: 'Cash App' },
       { date: '2026-03-01', amount: 16, note: 'Cash App' },
       { date: '2026-02-01', amount: 18, note: 'Cash App' },
@@ -63,10 +100,10 @@ const MEMBERS: Record<string, Member> = {
   },
   'sarah-65e9f848a6': {
     name: 'Sarah',
-    balance: 0,
-    asOf: '2026-09-01',
+    since: '2026-01-01',
+    feePlan: 'installments',
     payments: [
-      { date: '2026-09-01', amount: 18, note: 'Cash App' },
+      { date: '2026-09-01', amount: 18.75, note: 'Cash App' },
       { date: '2026-08-01', amount: 18, note: 'Cash App' },
       { date: '2026-07-01', amount: 18, note: 'Cash App' },
       { date: '2026-06-01', amount: 18, note: 'Cash App' },
@@ -76,33 +113,37 @@ const MEMBERS: Record<string, Member> = {
       { date: '2026-02-01', amount: 0, note: 'Waived via SS Promo', status: 'waived' },
       { date: '2026-01-01', amount: 18, note: 'Cash App' }
     ],
+    adjustments: [{ date: '2026-02-01', amount: -18, note: 'February waived (SS Promo)' }],
   },
   'michael-b999124566': {
     name: 'Michael',
-    balance: 0,
-    asOf: '2026-09-01',
+    since: '2026-01-01',
+    feePlan: 'yearly',
     payments: [
       { date: '2026-09-01', amount: 19, note: 'Cash App' },
       { date: '2026-08-01', amount: 15, note: 'Cash App' },
       { date: '2026-07-01', amount: 15, note: 'Cash App' },
       { date: '2026-06-01', amount: 15, note: 'Cash App' },
-      { date: '2026-05-01', amount: 35, note: 'Monthly+Yearly' },
+      { date: '2026-05-01', amount: 20, note: 'Yearly fee' },
+      { date: '2026-05-01', amount: 15, note: 'Cash App' },
       { date: '2026-04-01', amount: 15, note: 'Cash App' },
       { date: '2026-03-01', amount: 15, note: 'Cash App' },
       { date: '2026-02-01', amount: 16, note: 'Cash App' },
       { date: '2026-01-01', amount: 16, note: 'Cash App' }
     ],
+    adjustments: [{ date: '2026-09-01', amount: -5.75, note: 'Credit given for allowing cheaper rate of 15' }],
   },
   'austin-669736a1f9': {
     name: 'Austin',
-    balance: 5.5,
-    asOf: '2026-09-01',
+    since: '2026-01-01',
+    feePlan: 'yearly',
     payments: [
       { date: '2026-09-01', amount: 0, note: 'Missed', status: 'late' },
       { date: '2026-08-01', amount: 32, note: 'Apple Pay' },
       { date: '2026-07-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-06-01', amount: 16, note: 'Apple Pay' },
-      { date: '2026-05-01', amount: 36, note: 'Monthly+Yearly' },
+      { date: '2026-05-01', amount: 20, note: 'Yearly fee' },
+      { date: '2026-05-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-04-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-03-01', amount: 16, note: 'Apple Pay' },
       { date: '2026-02-01', amount: 16, note: 'Apple Pay' },
@@ -111,8 +152,8 @@ const MEMBERS: Record<string, Member> = {
   },
   'thomas-aab9e0b9d4': {
     name: 'Thomas',
-    balance: 0,
-    asOf: '2026-09-01',
+    since: '2026-01-01',
+    feePlan: 'installments',
     payments: [
       { date: '2026-09-28', amount: 21, note: 'Cash App' },
       { date: '2026-09-01', amount: 20.75, note: 'Cash App' },
@@ -138,6 +179,7 @@ const STATUS_COLOR: Record<PaymentStatus, string> = {
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 const longDate = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 const monthYear = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' });
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
@@ -169,36 +211,180 @@ export function paymentHistory(member: Member) {
   };
 }
 
+/** The monthly price in effect for month `mi` — the latest rate whose `from` month is on or before it. */
+function rateFor(rates: Rate[], mi: number): number {
+  let amount = 0;
+  for (const rate of rates) {
+    if (monthIndex(parseLocalDate(rate.from)) <= mi) amount = rate.amount;
+  }
+  return amount;
+}
+
+const FEE_MONTH = ANNUAL_FEE.month - 1;
+const INSTALLMENT = round2(ANNUAL_FEE.installments / 12);
+
+/** The annual-fee part of month `mi`'s charge: a lump each February, or one installment every month. */
+function annualFeeFor(plan: FeePlan, mi: number): number {
+  if (plan === 'installments') return INSTALLMENT;
+  return mi % 12 === FEE_MONTH ? ANNUAL_FEE.yearly : 0;
+}
+
+/** Where the member stands on the annual fee, for the notice under their balance. */
+function annualFeeStatus(plan: FeePlan, firstMonth: number, thisMonth: number) {
+  if (plan === 'installments') {
+    if (thisMonth < firstMonth) return undefined;
+    // Installment years run in 12-month cycles from the member's first month.
+    const installmentsMade = ((thisMonth - firstMonth) % 12) + 1;
+    return {
+      plan,
+      installmentsMade,
+      paidOffWith: firstOfMonth(thisMonth + 12 - installmentsMade),
+    } as const;
+  }
+  let dueMonth = Math.max(thisMonth + 1, firstMonth);
+  while (dueMonth % 12 !== FEE_MONTH) dueMonth++;
+  return {
+    plan,
+    dueDate: firstOfMonth(dueMonth),
+    dueNextMonth: dueMonth === thisMonth + 1,
+  } as const;
+}
+
 export function computeDues(member: Member, today: Date) {
-  const asOf = parseLocalDate(member.asOf);
+  const rates = member.rates ?? DUES_RATES;
+  const since = parseLocalDate(member.since);
+  const firstMonth = monthIndex(since);
+  const thisMonth = monthIndex(today);
 
-  // Charges land on the 1st. The 1st of any date's own month is always <= that date,
-  // so the 1sts falling in (asOf, today] are exactly those of months
-  // monthIndex(asOf)+1 through monthIndex(today).
-  const monthsAccrued = Math.max(0, monthIndex(today) - monthIndex(asOf));
-  const owed = round2(member.balance + monthsAccrued * MONTHLY_DUES);
+  // Charges land on the 1st, and the 1st of today's month has always passed, so every
+  // month from `since` through this one has been charged at that month's price.
+  let dues = 0;
+  let fees = 0;
+  for (let mi = firstMonth; mi <= thisMonth; mi++) {
+    dues += rateFor(rates, mi);
+    fees += annualFeeFor(member.feePlan, mi);
+  }
+  dues = round2(dues);
+  fees = round2(fees);
+  const monthsCharged = Math.max(0, thisMonth - firstMonth + 1);
 
-  // A credit pays forward: each whole $18.75 covers one upcoming charge.
+  const adjustments = round2(
+    (member.adjustments ?? [])
+      .filter((adj) => parseLocalDate(adj.date) <= today)
+      .reduce((sum, adj) => sum + adj.amount, 0),
+  );
+  const paid = round2(member.payments.reduce((sum, pmt) => sum + pmt.amount, 0));
+  const owed = round2(dues + fees + adjustments - paid);
+
+  // A credit pays forward, month by month, at whatever each upcoming month will cost.
   const credit = owed < 0 ? -owed : 0;
-  const monthsCovered = Math.floor(credit / MONTHLY_DUES);
-  const leftoverCredit = round2(credit - monthsCovered * MONTHLY_DUES);
+  const chargeFor = (mi: number) => round2(rateFor(rates, mi) + annualFeeFor(member.feePlan, mi));
+  let leftoverCredit = credit;
+  let nextMonth = Math.max(thisMonth + 1, firstMonth);
+  // Capped so a zero-price month can't spin forever.
+  for (let i = 0; i < 120 && chargeFor(nextMonth) > 0 && leftoverCredit >= chargeFor(nextMonth); i++) {
+    leftoverCredit = round2(leftoverCredit - chargeFor(nextMonth));
+    nextMonth++;
+  }
 
-  const nextChargeDate = firstOfMonth(monthIndex(today) + 1 + monthsCovered);
+  const nextChargeDate = firstOfMonth(nextMonth);
   // Day before the next charge — setDate(0) on the 1st rolls back to the previous month's end.
   const paidThrough = new Date(nextChargeDate);
   paidThrough.setDate(0);
 
   return {
     owed,
-    asOf,
-    monthsAccrued,
-    accrued: round2(monthsAccrued * MONTHLY_DUES),
+    since,
+    monthsCharged,
+    dues,
+    fees,
+    adjustments,
+    paid,
+    currentRate: rateFor(rates, thisMonth),
     credit,
     leftoverCredit,
     nextChargeDate,
-    nextChargeAmount: round2(MONTHLY_DUES - leftoverCredit),
+    nextChargeAmount: round2(chargeFor(nextMonth) - leftoverCredit),
     paidThrough,
+    annualFee: annualFeeStatus(member.feePlan, firstMonth, thisMonth),
   };
+}
+
+function Breakdown({ d }: { d: ReturnType<typeof computeDues> }) {
+  const row = (label: string, value: string) => (
+    <div className="flex justify-between gap-4">
+      <span>{label}</span>
+      <span className="font-medium text-slate-700 whitespace-nowrap">{value}</span>
+    </div>
+  );
+  return (
+    <div className="mt-8 pt-6 border-t border-slate-200/70 text-sm text-slate-500 space-y-1 text-left">
+      {row(
+        `Monthly dues since ${monthYear.format(d.since)} (${d.monthsCharged} month${d.monthsCharged === 1 ? '' : 's'})`,
+        `+${currency.format(d.dues)}`,
+      )}
+      {d.fees > 0 &&
+        row(
+          d.annualFee?.plan === 'installments' ? 'Annual fee installments' : 'Annual fees',
+          `+${currency.format(d.fees)}`,
+        )}
+      {d.adjustments !== 0 &&
+        row('Adjustments', `${d.adjustments > 0 ? '+' : '−'}${currency.format(Math.abs(d.adjustments))}`)}
+      {row('Payments received', `−${currency.format(d.paid)}`)}
+    </div>
+  );
+}
+
+/** Heads-up shown to yearly-plan members during the month before the annual fee is due. */
+function AnnualFeeReminder({ fee }: { fee: ReturnType<typeof computeDues>['annualFee'] }) {
+  if (fee?.plan !== 'yearly' || !fee.dueNextMonth) return null;
+  return (
+    <div className="bg-amber-50 rounded-2xl p-6 border border-amber-200 flex items-start gap-4">
+      <BellRing className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+      <div>
+        <p className="font-semibold text-amber-900">Your annual fee is due next month</p>
+        <p className="text-amber-800 text-sm mt-1">
+          The {currency.format(ANNUAL_FEE.yearly)} yearly fee will be added on {longDate.format(fee.dueDate)}, along
+          with that month's dues.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function AnnualFeeCard({ fee }: { fee: ReturnType<typeof computeDues>['annualFee'] }) {
+  if (!fee) return null;
+  return (
+    <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 flex items-start gap-4">
+      <CalendarCheck className="w-6 h-6 text-teal-600 flex-shrink-0 mt-0.5" />
+      <div className="flex-1">
+        <h2 className="text-lg font-bold text-slate-900 mb-1">Annual fee</h2>
+        {fee.plan === 'installments' ? (
+          <>
+            <p className="text-slate-600">
+              Paying over 12 months — {currency.format(INSTALLMENT)} a month toward the{' '}
+              {currency.format(ANNUAL_FEE.installments)} fee. Paid off with your{' '}
+              <span className="font-semibold text-slate-900">{monthYear.format(fee.paidOffWith)}</span> dues.
+            </p>
+            <div className="mt-4">
+              <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-teal-500 to-cyan-500"
+                  style={{ width: `${(fee.installmentsMade / 12) * 100}%` }}
+                />
+              </div>
+              <p className="text-slate-500 text-sm mt-2">{fee.installmentsMade} of 12 installments</p>
+            </div>
+          </>
+        ) : (
+          <p className="text-slate-600">
+            Paid yearly — next {currency.format(ANNUAL_FEE.yearly)} due{' '}
+            <span className="font-semibold text-slate-900">{longDate.format(fee.dueDate)}</span>.
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function LinkNotFound() {
@@ -252,6 +438,8 @@ export default function Dues() {
       </section>
 
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-8">
+        <AnnualFeeReminder fee={d.annualFee} />
+
         {owesMoney ? (
           /* ── Owes money ─────────────────────────────────────────────── */
           <div className="bg-white rounded-2xl p-10 text-center shadow-lg border border-slate-100">
@@ -261,20 +449,7 @@ export default function Dues() {
             </div>
             <p className="text-slate-600">Gym dues</p>
 
-            {d.monthsAccrued > 0 && (
-              <div className="mt-8 pt-6 border-t border-slate-100 text-sm text-slate-500 space-y-1">
-                <div className="flex justify-between">
-                  <span>Balance on {longDate.format(d.asOf)}</span>
-                  <span className="font-medium text-slate-700">{currency.format(member.balance)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>
-                    Monthly dues since then ({d.monthsAccrued} × {currency.format(MONTHLY_DUES)})
-                  </span>
-                  <span className="font-medium text-slate-700">+{currency.format(d.accrued)}</span>
-                </div>
-              </div>
-            )}
+            <Breakdown d={d} />
           </div>
         ) : (
           /* ── Paid up, possibly with credit ───────────────────────────── */
@@ -302,8 +477,12 @@ export default function Dues() {
               Next {currency.format(d.nextChargeAmount)} due {longDate.format(d.nextChargeDate)}
               {d.leftoverCredit > 0 && ` (${currency.format(d.leftoverCredit)} credit applied)`}
             </p>
+
+            <Breakdown d={d} />
           </div>
         )}
+
+        <AnnualFeeCard fee={d.annualFee} />
 
         {/* Pay */}
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 text-center">
@@ -378,8 +557,10 @@ export default function Dues() {
         </div>
 
         <p className="text-center text-slate-400 text-sm">
-          Balance last updated {longDate.format(d.asOf)} · Dues are {currency.format(MONTHLY_DUES)} on the 1st of
-          each month
+          Dues are {currency.format(d.currentRate)} on the 1st of each month
+          {member.feePlan === 'installments'
+            ? `, plus ${currency.format(INSTALLMENT)} toward the annual fee`
+            : `, plus a ${currency.format(ANNUAL_FEE.yearly)} annual fee each ${monthName.format(firstOfMonth(FEE_MONTH))}`}
         </p>
       </div>
     </div>
