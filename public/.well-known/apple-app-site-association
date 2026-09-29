@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["4HNDR6R7X7.com.netreapersoftware.fitsync"],
+        "components": [
+          { "/": "/user/*", "comment": "Shared social profiles" }
+        ]
+      }
+    ]
+  }
+}

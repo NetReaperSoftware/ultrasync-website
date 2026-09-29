@@ -11,6 +11,7 @@ import TermsOfUse from './pages/TermsOfUse';
 import ResetPassword from './pages/ResetPassword';
 import ConfirmEmail from './pages/ConfirmEmail';
 import Dues from './pages/Dues';
+import UserProfile from './pages/UserProfile';
 import NotFound from './pages/NotFound';
 
 function ScrollToTop() {
@@ -38,6 +39,7 @@ function App() {
           <Route path="/confirm-email" element={<ConfirmEmail />} />
           <Route path="/dues" element={<Dues />} />
           <Route path="/dues/:token" element={<Dues />} />
+          <Route path="/user/:username" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
