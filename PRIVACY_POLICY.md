@@ -177,8 +177,11 @@ If you create a username, other users can find you by it and see your username, 
 - **Private profile** (Private Profile on): New followers must be approved, only approved followers can see your content in the app, and no profile page is shown on the web.
 
 ### Workout Visibility
-- **Everyone**: People who can view your profile in the app can see your workouts, workout photos, stats, muscle split, weekly training time, and routines. They can also like and comment on your workouts and save copies of your workouts and routines to their own account.
+- **Everyone**: People who can view your profile in the app can see your workouts, workout photos, stats, muscle split, weekly training time, and routines. They can also like and comment on your workouts and save copies of your workouts and routines to their own account. This includes cardio workouts (their activity, time, distance, pace, calories, and photos), but not their route maps unless you turn on Show GPS Routes.
 - **Private**: Only you can see your workouts, routines, and stats. Others can still follow you.
+
+### GPS Routes
+Route maps of your cardio workouts are private by default. If you turn on **Show GPS Routes** (Settings → Privacy & Social), people who can see your workouts in the app can also see a simplified map of each route, which can show where a workout started and finished. Routes are never shown on your public web profile. Turning the setting off hides them again.
 
 ### Likes and Comments
 Likes and comments you post are visible to anyone who can see the workout you posted them on.
@@ -187,6 +190,9 @@ Likes and comments you post are visible to anyone who can see the workout you po
 You can share a link to your profile or another user's profile. You can block any user; a blocked user can't find, view, or follow you.
 
 You can report a user, a workout, or a comment. We keep each report, including who sent it and a copy of the reported content, so we can review it. The reported user is not told who reported them.
+
+### Content Review
+We may review any content, including private profiles, to enforce our Terms of Use and investigate violations. Privacy settings and blocks control what other users can see; they don't limit this review.
 
 ### Public Web Pages
 Information shown on your public web profile can be seen, and may be copied or saved, by anyone, including search engines. Making your profile private removes the page, but we can't remove copies other people or services have already made.
@@ -245,12 +251,13 @@ Your location information is used only to:
 - Provide real-time feedback during workouts
 - Generate activity statistics and progress reports
 
-Your location and routes are never shown to other users or on your public web profile.
+Your routes are shown to other users only if you turn on Show GPS Routes, and never on your public web profile.
 
 ### Location Controls
 You can:
 - Allow or deny location access at any time in your device settings
 - Choose not to track a cardio workout
+- Choose whether other users can see your route maps (Settings → Privacy & Social → Show GPS Routes)
 - Delete a cardio workout, which also deletes its route
 - View your saved routes in the app
 
