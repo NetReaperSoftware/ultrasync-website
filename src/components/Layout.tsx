@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import logo from '../../assets/icons/Logo-1024.png';
+import { useSession } from '../lib/useSession';
 
 const APP_STORE_URL = 'https://apps.apple.com/us/app/ultrasync-fitness-tracker/id6749923790';
 
@@ -9,6 +10,8 @@ export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const session = useSession();
+  const accountLink = session ? { to: '/account', label: 'Account' } : { to: '/login', label: 'Sign in' };
   const isHome = location.pathname === '/';
 
   useEffect(() => {
@@ -41,6 +44,7 @@ export default function Layout() {
               <a href="/#features" className="font-medium text-slate-600 hover:text-slate-900 transition-colors">Features</a>
               <NavLink to="/faq" className={navLinkClass}>FAQ</NavLink>
               <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+              <NavLink to={accountLink.to} className={navLinkClass}>{accountLink.label}</NavLink>
               <a
                 href={APP_STORE_URL}
                 target="_blank"
@@ -63,6 +67,7 @@ export default function Layout() {
                 <a href="/#features" className="font-medium text-slate-600 hover:text-slate-900 transition-colors py-1">Features</a>
                 <NavLink to="/faq" className={navLinkClass}>FAQ</NavLink>
                 <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+                <NavLink to={accountLink.to} className={navLinkClass}>{accountLink.label}</NavLink>
                 <a
                   href={APP_STORE_URL}
                   target="_blank"

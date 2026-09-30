@@ -10,6 +10,8 @@ import ResetPassword from './pages/ResetPassword';
 import ConfirmEmail from './pages/ConfirmEmail';
 import Dues from './pages/Dues';
 import UserProfile from './pages/UserProfile';
+import Login from './pages/Login';
+import Account from './pages/Account';
 import NotFound from './pages/NotFound';
 
 // Loaded on demand: they bundle the Markdown renderer, which no other page needs
@@ -42,6 +44,8 @@ function App() {
           <Route path="/dues" element={<Dues />} />
           <Route path="/dues/:token" element={<Dues />} />
           <Route path="/user/:username" element={<UserProfile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<Account />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
