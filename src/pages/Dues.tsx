@@ -18,6 +18,7 @@ export type Rate = {
 const DUES_RATES: Rate[] = [
   { from: '2026-01-01', amount: 16 },
   { from: '2026-09-01', amount: 18.75 },
+  { from: '2026-11-01', amount: 19.5 },
 ];
 
 /** The yearly fee, due on the 1st of `month` (1 = January). What it costs depends on the member's `feePlan`. */
