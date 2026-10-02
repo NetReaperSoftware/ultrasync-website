@@ -59,7 +59,7 @@ We automatically collect:
 - **Settings and Preferences**: Your app configuration and customization choices
 
 ### 5. Third-Party Health Platform Data
-With your permission, we read data from your device's health platform. UltraSync does not write any data to these platforms.
+With your permission, we read data from your device's health platform. On iOS, with your permission, UltraSync also saves your completed workouts to Apple Health; it doesn't write any other data, and it doesn't write to Health Connect.
 
 - **Apple Health (iOS)**: Step count, active and resting energy burned, height, weight, date of birth, biological sex, and swimming workouts and distance
 - **Health Connect (Android)**: Step count
@@ -74,7 +74,7 @@ We use your information to:
 2. **Track Progress**: Monitor your fitness journey, weight changes, and goal achievement
 3. **Generate Recommendations**: Create personalized workout routines and nutrition suggestions
 4. **Calculate Metrics**: Compute calories burned, distance traveled, pace, and elevation changes
-5. **Sync Health Data**: Read steps, energy burned, and body measurements from Apple Health or Health Connect
+5. **Sync Health Data**: Read steps, energy burned, and body measurements from Apple Health or Health Connect, and save your completed workouts to Apple Health
 
 ### Secondary Uses
 We may also use your information to:
@@ -104,8 +104,8 @@ We implement appropriate technical and organizational measures to protect your d
 We use the following service providers to run UltraSync. Each receives only the data it needs for the purpose listed, and its handling of that data is governed by its own privacy policy.
 
 ### Apple Health (iOS)
-- **Purpose**: Read steps, energy burned, body measurements, and swimming workouts
-- **Data Shared**: Health data stays on your device until you grant UltraSync permission to read it; UltraSync does not send data to Apple Health
+- **Purpose**: Read steps, energy burned, body measurements, and swimming workouts, and save the workouts you complete in UltraSync
+- **Data Shared**: Health data stays on your device until you grant UltraSync permission to read it. If you allow it, UltraSync saves each workout you complete in the app to Apple Health: its type, start and end time, calories burned, and, for runs, walks, and rides, distance. These count toward your activity in Apple Health. UltraSync writes no other data to Apple Health
 - **User Control**: Revoke access at any time in the iOS Settings or Health app
 
 ### Health Connect (Android)
