@@ -379,7 +379,7 @@ For technical issues unrelated to privacy:
 ---
 
 **Document Version**: 1.1  
-**Effective Date**: October 2, 2026  
+**Effective Date**: October 14, 2026  
 **Review Schedule**: This policy is reviewed annually and updated as necessary to maintain compliance and transparency.
 
 By using UltraSync, you acknowledge that you have read, understood, and agree to this Privacy Policy.
