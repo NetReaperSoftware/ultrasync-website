@@ -55,6 +55,7 @@ Location is collected only while a cardio workout is being tracked. See Location
 We automatically collect:
 
 - **Device Information**: Device type, operating system version, app version
+- **App Activity**: When you open the app, with your device platform (iOS or Android) and app version, so we can understand how the app is used. At most one record is kept per 30 minutes
 - **Settings and Preferences**: Your app configuration and customization choices
 
 ### 5. Third-Party Health Platform Data
@@ -228,6 +229,7 @@ You can also:
 - **Account Data**: Retained while your account is active
 - **Health and Fitness Data**: Stored for as long as your account exists
 - **Location Data**: Kept with its cardio workout until you delete the workout or your account
+- **App Activity**: Records of when you opened the app are deleted after 180 days
 - **Legal Requirements**: Some data may be retained longer if required by law
 
 ### Deletion Process

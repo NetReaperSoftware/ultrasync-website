@@ -44,6 +44,10 @@ jobs:
     - name: Copy CNAME and 404 for SPA routing
       run: cp CNAME dist/CNAME && cp dist/index.html dist/404.html
 
+    # The app downloads this to show the current policy without an app release
+    - name: Publish raw privacy policy
+      run: cp PRIVACY_POLICY.md dist/privacy-policy.md
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
 
