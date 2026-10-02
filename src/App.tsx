@@ -10,6 +10,7 @@ import ResetPassword from './pages/ResetPassword';
 import ConfirmEmail from './pages/ConfirmEmail';
 import Dues from './pages/Dues';
 import UserProfile from './pages/UserProfile';
+import WorkoutPage from './pages/WorkoutPage';
 import Login from './pages/Login';
 import Account from './pages/Account';
 import NotFound from './pages/NotFound';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/dues" element={<Dues />} />
           <Route path="/dues/:token" element={<Dues />} />
           <Route path="/user/:username" element={<UserProfile />} />
+          <Route path="/workout/:workoutId" element={<WorkoutPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<Account />} />
           <Route path="*" element={<NotFound />} />
