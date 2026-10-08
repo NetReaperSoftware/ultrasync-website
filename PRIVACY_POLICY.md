@@ -1,6 +1,6 @@
 # UltraSync Privacy Policy
 
-**Last Updated: October 2, 2026**
+**Last Updated: October 5, 2026**
 
 ## Introduction
 
@@ -162,6 +162,7 @@ We may disclose your information only when:
 4. **Consent**: With your explicit, informed consent
 5. **Service Providers**: To trusted third-party service providers bound by confidentiality agreements
 6. **Social Features**: Information you choose to make visible to other users or on your public profile page, as described in Social Features and Public Profiles
+7. **Coaching**: With a personal trainer you connect to, as described in Coaching
 
 ### Aggregated Data
 We may share aggregated, anonymized data that cannot identify individual users for research or analytics purposes.
@@ -197,6 +198,30 @@ We may review any content, including private profiles, to enforce our Terms of U
 
 ### Public Web Pages
 Information shown on your public web profile can be seen, and may be copied or saved, by anyone, including search engines. Making your profile private removes these pages, and setting Workout Visibility to Private removes your workouts from them, but we can't remove copies other people or services have already made.
+
+## Coaching
+
+You can connect to a personal trainer ("coach") who uses our UltraSync Coach app. Coaches are independent professionals, not UltraSync employees, and are approved by us before they can connect to anyone.
+
+### Connecting to a Coach
+You connect by entering an invite code your coach gives you, after we show you what they'll be able to see. You can have one coach at a time.
+
+### What Your Coach Can See
+While you're connected, your coach can see:
+- Your username, email address, and fitness profile basics (age, gender, height, weight, target weight, activity level, experience level, goal, and daily step goal)
+- Your strength and cardio workouts, including exercises, sets, reps, weights, duration, distance, pace, calories, and notes, whatever your Workout Visibility setting
+- Your food log: daily calorie and macro totals, and the foods you logged each day
+- Your daily steps and logged body weight
+- The weekly check-ins you send them
+- Which of the program's sessions you completed
+
+Your coach can't see your workout photos, GPS route maps, or messages, and can't change your account, workouts, or food log.
+
+### What Your Coach Can Do
+Your coach can build a training program that appears on your Home screen and in your routines, leave notes on training days, and suggest calorie, macro, and step goals. Suggested goals change nothing until you accept them.
+
+### Ending Coaching
+You can leave coaching at any time in Settings → Coaching, and your coach can end it too. Your coach's access ends immediately. You keep copies of the program's routines, and we keep the record of your completed sessions and check-ins with your account until you delete it.
 
 ## Your Privacy Rights
 

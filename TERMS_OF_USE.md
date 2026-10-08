@@ -94,6 +94,13 @@ UltraSync has no tolerance for objectionable content or abusive users. You agree
 - You can block any user. A blocked user can't find, view, or follow you, and you won't see their content
 - We review reports and may remove content, and suspend or terminate the accounts of users who post objectionable content or break these Terms, with or without notice
 
+### 6.5 Coaching
+
+- You can connect to a personal trainer ("coach") who uses the UltraSync Coach app. While you're connected, your coach can see the data described in our Privacy Policy and can build your training program and suggest goals
+- Coaches are independent professionals, not employees or agents of UltraSync. We approve coaches before they can connect to anyone, but we don't verify their qualifications, and we aren't responsible for their programs, advice, or conduct, or for any arrangement or payment between you and your coach
+- Coaches must follow these Terms, use clients' data only to coach them, and not share it with anyone else. We may suspend or remove a coach who doesn't
+- You or your coach can end coaching at any time
+
 ## 7. Health and Fitness Disclaimer
 
 ### 7.1 Not Medical Advice
@@ -136,6 +143,7 @@ Your use of UltraSync is also governed by our [Privacy Policy](/privacy-policy),
 Key privacy points:
 - We collect account information, fitness and health data, and, when you track cardio workouts, location data
 - Content you share through social features can be seen by other users, and on the web if your profile is public
+- A coach you connect to can see your workouts, food log, steps, weight, and fitness profile until you or they end coaching
 - We use Supabase for secure data storage
 - We do not sell your personal information to third parties
 - You can delete your account, and request deletion of your data, at any time
