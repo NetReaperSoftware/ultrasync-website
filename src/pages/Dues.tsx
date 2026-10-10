@@ -142,6 +142,7 @@ const MEMBERS: Record<string, Member> = {
     since: '2026-01-01',
     feePlan: 'yearly',
     payments: [
+      { date: '2026-10-09', amount: 18.75, note: 'September dues (late)', status: 'late' },
       { date: '2026-09-01', amount: 0, note: 'Missed', status: 'late' },
       { date: '2026-08-01', amount: 32, note: 'Apple Pay' },
       { date: '2026-07-01', amount: 16, note: 'Apple Pay' },
