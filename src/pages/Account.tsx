@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { Crown, Dumbbell, Footprints, LogOut, Utensils, Users } from 'lucide-react';
+import { Crown, Dumbbell, Footprints, LogOut, Upload, Utensils, Users } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { supabase } from '../lib/supabase';
 import { useSession } from '../lib/useSession';
@@ -182,6 +182,19 @@ function AccountDetails({ account }: { account: MyAccount }) {
             <Row label="Following" value={account.following.toLocaleString()} />
             <Row label="Last workout" value={account.last_workout_date ? formatDate(account.last_workout_date) : null} />
           </dl>
+        </Card>
+
+        <Card title="Import">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <p className="text-sm text-slate-600">Coming from Hevy? Bring your workout history and routines with you.</p>
+            <Link
+              to="/import/hevy"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-sm font-semibold hover:shadow-lg hover:shadow-teal-500/30 transition-all flex-shrink-0"
+            >
+              <Upload className="w-4 h-4" />
+              Import from Hevy
+            </Link>
+          </div>
         </Card>
 
         <Card title="Account">

@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile';
 import WorkoutPage from './pages/WorkoutPage';
 import Login from './pages/Login';
 import Account from './pages/Account';
+import HevyImport from './pages/HevyImport';
 import NotFound from './pages/NotFound';
 
 // Loaded on demand: they bundle the Markdown renderer, which no other page needs
@@ -48,6 +49,7 @@ function App() {
           <Route path="/workout/:workoutId" element={<WorkoutPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/import/hevy" element={<HevyImport />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
