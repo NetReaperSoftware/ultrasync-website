@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { AlertTriangle, Check, ChevronDown, FileUp, Loader2, Search } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useSession } from '../lib/useSession';
-import { HevyCsvError, parseHevyCsv, localMinutes, type HevyExport } from '../lib/hevy/parseHevyCsv';
+import { HevyCsvError, parseHevyCsv, localMinutes, type HevyExport, type LocalDateTime } from '../lib/hevy/parseHevyCsv';
 import { guessEquipment, suggestExercise, type CatalogExercise, type MatchConfidence } from '../lib/hevy/matchExercises';
 import {
   convertWorkout, droppedFields, isAutomaticTitle, placeWorkouts, routinePayload, summarizeExercises,
@@ -72,6 +72,13 @@ function timeZones(current: string): string[] {
 
 function formatDay(iso: string, timeZone: string): string {
   return new Date(iso).toLocaleDateString(undefined, { timeZone, month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// A Hevy wall-clock date as written, whatever the chosen timezone
+function formatLocalDay(t: LocalDateTime): string {
+  return new Date(Date.UTC(t.year, t.month - 1, t.day)).toLocaleDateString(undefined, {
+    timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric',
+  });
 }
 
 function friendlyError(error: unknown): string {
@@ -529,21 +536,28 @@ function ReviewStep({
         )}
       >
         <p className="text-sm text-slate-600 mb-4">
-          Ticked workout names become routines in a "Hevy" folder, set up like your most recent workout with that name,
-          and keep their name on your imported workouts. Unticked ones import as plain workouts.
+          Ticked workout names become routines in a "Hevy" folder and keep their name on your imported workouts.
+          Each is set up like your most recent full workout with that name, skipping shorter sessions where you only
+          logged part of it. Unticked ones import as plain workouts.
         </p>
         <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-2">
           {titles.map(t => (
             <li key={t.title}>
-              <label className="flex items-center gap-3 text-sm cursor-pointer">
+              <label className="flex items-start gap-3 text-sm cursor-pointer">
                 <input
                   type="checkbox"
                   checked={routineTitles.has(t.title)}
                   onChange={() => toggleTitle(t.title)}
-                  className="w-4 h-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+                  className="w-4 h-4 mt-0.5 rounded border-slate-300 text-teal-600 focus:ring-teal-500 flex-shrink-0"
                 />
-                <span className="text-slate-900 break-words min-w-0">{t.title}</span>
-                <span className="text-slate-400 ml-auto flex-shrink-0">{t.workoutCount}</span>
+                <span className="min-w-0">
+                  <span className="block text-slate-900 break-words">{t.title}</span>
+                  <span className="block text-xs text-slate-500">
+                    {t.template.exercises.length} {t.template.exercises.length === 1 ? 'exercise' : 'exercises'}, from{' '}
+                    {formatLocalDay(t.template.start)}
+                  </span>
+                </span>
+                <span className="text-slate-400 ml-auto flex-shrink-0" title="Workouts with this name">{t.workoutCount}</span>
               </label>
             </li>
           ))}
@@ -677,12 +691,12 @@ export default function HevyImport() {
       const exerciseIds = [...new Set([...resolved.values()].filter(Boolean).map(e => e!.id))];
       const history = await loadHistory(userId, exerciseIds);
 
-      // 3. Routines, from each picked name's latest workout
+      // 3. Routines, from each picked name's most recent full workout
       progress('Creating routines…');
       const routinePayloads: RoutinePayload[] = [];
       for (const title of summarizeTitles(loaded.data)) {
         if (!routineTitles.has(title.title)) continue;
-        const exercises = convertWorkout(title.latest, resolve);
+        const exercises = convertWorkout(title.template, resolve);
         if (exercises.length > 0) routinePayloads.push(routinePayload(title.title, exercises));
       }
       const routines = await importRoutines(routinePayloads);

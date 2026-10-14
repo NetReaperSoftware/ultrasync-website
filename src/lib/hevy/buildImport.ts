@@ -62,21 +62,36 @@ export function droppedFields(usage: ExerciseUsage, exercise: CatalogExercise): 
 export interface TitleUsage {
   title: string;
   workoutCount: number;
-  latest: HevyWorkout;
+  // The workout its routine is built from (see routineTemplate)
+  template: HevyWorkout;
+}
+
+// A workout with at least this share of the most exercises a name ever had
+// counts as a full session of it
+const FULL_SESSION_SHARE = 0.75;
+
+/**
+ * The workout a routine is rebuilt from: the most recent full session of it.
+ * The export has no routines, only workouts, and the latest workout is often
+ * a partial one (a single exercise logged on its own), so the latest alone
+ * would make a routine of one exercise.
+ */
+export function routineTemplate(workouts: HevyWorkout[]): HevyWorkout {
+  const most = Math.max(...workouts.map(w => w.exercises.length));
+  const full = workouts.filter(w => w.exercises.length >= most * FULL_SESSION_SHARE);
+  return full[full.length - 1]; // workouts are oldest first
 }
 
 export function summarizeTitles(data: HevyExport): TitleUsage[] {
-  const titles = new Map<string, TitleUsage>();
+  const byTitle = new Map<string, HevyWorkout[]>();
   for (const workout of data.workouts) {
-    const entry = titles.get(workout.title);
-    if (entry) {
-      entry.workoutCount++;
-      entry.latest = workout; // workouts are oldest first
-    } else {
-      titles.set(workout.title, { title: workout.title, workoutCount: 1, latest: workout });
-    }
+    const list = byTitle.get(workout.title);
+    if (list) list.push(workout);
+    else byTitle.set(workout.title, [workout]);
   }
-  return [...titles.values()].sort((a, b) => b.workoutCount - a.workoutCount);
+  return [...byTitle.entries()]
+    .map(([title, workouts]) => ({ title, workoutCount: workouts.length, template: routineTemplate(workouts) }))
+    .sort((a, b) => b.workoutCount - a.workoutCount);
 }
 
 // ─── Placing workouts in time ───────────────────────────────────────────────
@@ -197,7 +212,7 @@ export interface RoutinePayload {
   exercises: Record<string, unknown>[];
 }
 
-/** A routine from the title's latest workout, the way the app saves one */
+/** A routine from the title's template workout, the way the app saves one */
 export function routinePayload(title: string, exercises: ConvertedExercise[]): RoutinePayload {
   const rows: Record<string, unknown>[] = [];
   exercises.forEach((entry, exerciseIndex) => {
