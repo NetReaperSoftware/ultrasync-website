@@ -105,6 +105,7 @@ const MEMBERS: Record<string, Member> = {
     since: '2026-01-01',
     feePlan: 'installments',
     payments: [
+      { date: '2026-11-01', amount: 20.75, note: 'Cash App' },
       { date: '2026-10-01', amount: 22.75, note: 'Cash App' },
       { date: '2026-09-01', amount: 18.75, note: 'Cash App' },
       { date: '2026-08-01', amount: 18, note: 'Cash App' },
