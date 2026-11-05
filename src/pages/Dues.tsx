@@ -163,6 +163,7 @@ const MEMBERS: Record<string, Member> = {
     since: '2026-01-01',
     feePlan: 'installments',
     payments: [
+      { date: '2026-11-05', amount: 21.25, note: 'Zelle' },
       { date: '2026-09-28', amount: 21, note: 'Cash App' },
       { date: '2026-09-01', amount: 20.75, note: 'Cash App' },
       { date: '2026-08-01', amount: 18, note: 'Cash App' },
